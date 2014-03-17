@@ -15,7 +15,7 @@ include_directories(BEFORE SYSTEM K:/Build/llvm-project/vs11/Release/lib/clang/3
 include_directories(SYSTEM "${TOOLCHAIN_DIR}/../source/include")
 link_directories("${TOOLCHAIN_DIR}/../lib")
 
-set(DEFAULT_OBJECTS "\"${TOOLCHAIN_DIR}/../lib/startup.o\" \"${TOOLCHAIN_DIR}/../lib/init.o\"")
+set(DEFAULT_OBJECTS "\"${TOOLCHAIN_DIR}/../lib/init.o\"")
 set(LINK_LINE "arm-none-eabi-ld -T \"${TOOLCHAIN_DIR}/STM32F103RB.ld\" -nostdlib -nodefaultlib -gc-sections <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> ${DEFAULT_OBJECTS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES> -lpdc -lcore -lperipherals")
 
 set(CMAKE_C_LINK_EXECUTABLE ${LINK_LINE})

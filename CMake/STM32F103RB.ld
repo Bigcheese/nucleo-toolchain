@@ -32,14 +32,14 @@ SECTIONS
     . = ALIGN(4);
   } >rom
 
-   /* .ARM.exidx is sorted, so has to go in its own output section.*/
-   .ARM.exidx : {
-        __exidx_start = .;
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-        __exidx_end = .;
-    } >rom
+  /* .ARM.exidx is sorted, so has to go in its own output section.*/
+  .ARM.exidx : {
+    __exidx_start = .;
+    *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    __exidx_end = .;
+  } >rom
 
-    _sidata = .;         /* global needed for startup_stm3210x_md_vl.S */  
+  _sidata = .;         /* global needed for startup_stm3210x_md_vl.S */  
 
   /*now start ram area with initialized data section */
   .data :

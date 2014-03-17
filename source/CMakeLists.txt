@@ -3,7 +3,8 @@ project(toolchain C CXX ASM)
 
 include_directories(include)
 
-add_library(startup OBJECT startup_stm32f10x_md.s init.cpp)
+add_library(startup OBJECT init.c)
+set_source_files_properties(init.c PROPERTIES COMPILE_FLAGS -fno-builtin)
 
 add_subdirectory(core)
 add_subdirectory(peripherals)
