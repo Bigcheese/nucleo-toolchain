@@ -1,3 +1,6 @@
+#include <stm32f10x.h>
+#include <stm32f10x_rcc.h>
+
 typedef void InitFunc();
 typedef void VectorFunc();
 
@@ -19,14 +22,31 @@ static void initArrays() {
   }
 }
 
+// Initialize UART for stdio.
+void ITMInit() {
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  TPI->ACPR = (72000000 / 2000000) - 1; // Prescaler.
+  TPI->SPPR = 1; // Serial Wire Output - manchester
+  TPI->FFCR |= TPI_FFCR_TrigIn_Msk;
+  DBGMCU->CR |= DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE_0 | DBGMCU_CR_DBG_SLEEP | DBGMCU_CR_DBG_STOP |
+                DBGMCU_CR_DBG_STANDBY | DBGMCU_CR_DBG_WWDG_STOP | DBGMCU_CR_DBG_IWDG_STOP;
+  ITM->LAR = 0xC5ACCE55;
+  ITM->TCR |= ITM_TCR_ITMENA_Msk | ITM_TCR_SYNCENA_Msk | ITM_TCR_DWTENA_Msk | 0x10000;
+  ITM->TER |= 1;
+  ITM->TPR |= 1;
+}
+
 void Reset_Handler() __attribute__((weak));
 void Reset_Handler() {
   for (char *from = &_sidata, *to = &_sdata; to < &_edata; ++from, ++to)
     *to = *from;
   for (char *to = &_sbss; to < &_ebss; ++to)
     *to = 0;
+  // Initialize system clock.
   SystemInit();
   initArrays();
+  ITMInit();
   main();
   while (1);
 }

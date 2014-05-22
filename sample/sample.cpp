@@ -8,7 +8,9 @@ extern "C" void __aeabi_idivmod() {}
 DigitalOut out(LED1);
 
 int main(void) {
+  bool val = 0;
   while(1) {
-    out.write(out.read() ^ 1);
+    out.write(val);
+    val ^= 1;
   }
 }

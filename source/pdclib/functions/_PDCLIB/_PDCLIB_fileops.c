@@ -5,6 +5,7 @@
 */
 
 #ifndef REGTEST
+#include <stm32f10x.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <_PDCLIB_glue.h>
@@ -20,9 +21,14 @@ static bool readf( _PDCLIB_fd_t self, void * buf, size_t length,
 static bool writef( _PDCLIB_fd_t self, const void * buf, size_t length, 
                    size_t * numBytesWritten )
 {
-    errno = ENOTSUP;
-    return false;
+    const char *str = (const char *)buf;
+    for (size_t i = 0; i < length; ++i) {
+        ITM_SendChar(*str++);
+    }
+    *numBytesWritten = length;
+    return true;
 }
+
 static bool seekf( _PDCLIB_fd_t self, int_fast64_t offset, int whence,
     int_fast64_t* newPos )
 {
